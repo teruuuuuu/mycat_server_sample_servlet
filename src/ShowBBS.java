@@ -2,11 +2,13 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import jp.co.teruuu.mycat.servlet.http.Cookie;
 import jp.co.teruuu.mycat.servletinterface.HttpServlet;
 import jp.co.teruuu.mycat.servletinterface.HttpServletRequest;
 import jp.co.teruuu.mycat.servletinterface.HttpServletResponse;
+import jp.co.teruuu.mycat.servletinterface.HttpSession;
 import jp.co.teruuu.mycat.servletinterface.ServletException;
 
 
@@ -31,6 +33,7 @@ public class ShowBBS extends HttpServlet {
         out.println("<body>");
         out.println("<h1>テスト掲示板</h1>");
         out.println("<form action='/SampleServlet/PostBBS' method='POST'>");
+        out.println("カウント：" + this.getSessionCount(request) + "<br/>");
         out.println("タイトル：<input type='text' name='title' size='60'><br/>");
         out.println("ハンドル名：<input type='text' name='handle' value='" + getHandleNameCookie(request) + "' ><br/>");
         out.println("<textarea name='message' rows='4' cols='60'>"
@@ -55,5 +58,15 @@ public class ShowBBS extends HttpServlet {
     		if("bbsHandleName".equals(cookie.getName().trim()))
     			return cookie.getValue();
     	return "";
+    }
+    
+    private String getSessionCount(HttpServletRequest request){
+    	HttpSession session = request.getSession();
+    	if(session.getAttributes("count") == null){
+    		session.setAttributes("count", 0);
+    	}
+    	int next_count = (int)session.getAttributes("count") + 1;
+    	session.setAttributes("count", next_count);
+    	return String.valueOf(next_count);
     }
 }
