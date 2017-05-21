@@ -1,14 +1,17 @@
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import servletinterface.HttpServlet;
-import servletinterface.HttpServletRequest;
-import servletinterface.HttpServletResponse;
-import servletinterface.ServletException;
+import jp.co.teruuu.mycat.servlet.http.Cookie;
+import jp.co.teruuu.mycat.servletinterface.HttpServlet;
+import jp.co.teruuu.mycat.servletinterface.HttpServletRequest;
+import jp.co.teruuu.mycat.servletinterface.HttpServletResponse;
+import jp.co.teruuu.mycat.servletinterface.ServletException;
+
 
 public class ShowBBS extends HttpServlet {
-    private ArrayList<Message> messageList = new ArrayList<Message>();
+	private ArrayList<Message> messageList = new ArrayList<Message>();
 
     private String escapeHtml(String src) {
         return src.replace("&", "&amp;").replace("<", "&lt;")
@@ -29,7 +32,7 @@ public class ShowBBS extends HttpServlet {
         out.println("<h1>テスト掲示板</h1>");
         out.println("<form action='/SampleServlet/PostBBS' method='POST'>");
         out.println("タイトル：<input type='text' name='title' size='60'><br/>");
-        out.println("ハンドル名：<input type='text' name='handle'><br/>");
+        out.println("ハンドル名：<input type='text' name='handle' value='" + getHandleNameCookie(request) + "' ><br/>");
         out.println("<textarea name='message' rows='4' cols='60'>"
                     + "</textarea><br/>");
         out.println("<input type='submit'/>");
@@ -44,5 +47,13 @@ public class ShowBBS extends HttpServlet {
         }
         out.println("</body>");
         out.println("</html>");
+    }
+    
+    private String getHandleNameCookie(HttpServletRequest request){
+    	Cookie[] cookies = request.getCookie();
+    	for(Cookie cookie: cookies)
+    		if("bbsHandleName".equals(cookie.getName().trim()))
+    			return cookie.getValue();
+    	return "";
     }
 }

@@ -1,9 +1,11 @@
+
 import java.io.IOException;
 
-import servletinterface.HttpServlet;
-import servletinterface.HttpServletRequest;
-import servletinterface.HttpServletResponse;
-import servletinterface.ServletException;
+import jp.co.teruuu.mycat.servlet.http.Cookie;
+import jp.co.teruuu.mycat.servletinterface.HttpServlet;
+import jp.co.teruuu.mycat.servletinterface.HttpServletRequest;
+import jp.co.teruuu.mycat.servletinterface.HttpServletResponse;
+import jp.co.teruuu.mycat.servletinterface.ServletException;
 
 
 public class PostBBS extends HttpServlet{
@@ -16,6 +18,11 @@ public class PostBBS extends HttpServlet{
         		                         request.getParameter("handle"),
                                          request.getParameter("message"));
         Message.messageList.add(0, newMessage);
+        setHandleName(response, request.getParameter("handle"));
         response.sendRedirect("/SampleServlet/ShowBBS");
     }
+	
+	private void setHandleName(HttpServletResponse response, String handleName){
+		response.addCookie(new Cookie("bbsHandleName", handleName));
+	}
 }
